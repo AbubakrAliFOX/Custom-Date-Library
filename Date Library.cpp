@@ -4,6 +4,7 @@
 #include <ctime>
 #include <iomanip>
 #include "clsString.h"
+#include "clsPeriod.h";
 #include "clsDate.h"
 
 using namespace std;

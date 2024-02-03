@@ -13,9 +13,9 @@ public:
         time_t t = time(0);
         tm now;
         localtime_s(&now, &t);
-       _Year = now.tm_year + 1900;
-       _Month = now.tm_mon + 1;
-       _Day = now.tm_mday;
+        _Year = now.tm_year + 1900;
+        _Month = now.tm_mon + 1;
+        _Day = now.tm_mday;
     }
 
     clsDate(string DateString)
@@ -314,5 +314,22 @@ public:
     {
 
         return IsDateAfterDate2(*this, Date2);
+    }
+
+    static enum BeforeAfterEqualDate
+    {
+        After = 1,
+        Before = -1,
+        Equal = 0
+    };
+
+    static BeforeAfterEqualDate CompareTwoDates(clsDate Date1, clsDate Date2)
+    {
+        return IsDateBeforeDate2(Date1, Date2) ? (BeforeAfterEqualDate::Before) : (IsDateEqualtoDate2(Date1, Date2) ? BeforeAfterEqualDate::Equal : BeforeAfterEqualDate::After);
+    }
+
+    BeforeAfterEqualDate CompareTwoDates(clsDate Date2)
+    {
+        return CompareTwoDates(*this, Date2);
     }
 };
