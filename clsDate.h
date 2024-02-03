@@ -2,64 +2,76 @@
 class clsDate
 {
 private:
-    struct Date
-    {
-        short Day, Month, Year;
-    };
-
-    Date _Date;
+    short _Day = 1;
+    short _Month = 1;
+    short _Year = 2000;
 
 public:
     // constructors
     clsDate()
     {
-        _Date = GetSysDate();
+        time_t t = time(0);
+        tm now;
+        localtime_s(&now, &t);
+       _Year = now.tm_year + 1900;
+       _Month = now.tm_mon + 1;
+       _Day = now.tm_mday;
     }
 
     clsDate(string DateString)
     {
-        _Date = StringToDate(DateString);
+        vector<string> vDate = clsString::split(DateString, "/");
+        _Day = stoi(vDate[0]);
+        _Month = stoi(vDate[1]);
+        _Year = stoi(vDate[2]);
     }
 
     clsDate(short Day, short Month, short Year)
     {
-        Date NewDate;
-        NewDate.Day = Day;
-        NewDate.Month = Month;
-        NewDate.Year = Year;
-        _Date = NewDate;
+        _Day = Day;
+        _Month = Month;
+        _Year = Year;
     }
 
     clsDate(short DayFromYearBeginning, short Year)
     {
-        _Date = DateFromYearBegnning(Year, DayFromYearBeginning);
+        clsDate newDate = DateFromYearBegnning(Year, DayFromYearBeginning);
+        _Day = newDate._Day;
+        _Month = newDate._Month;
+        _Year = newDate._Year;
     }
 
-    static Date GetSysDate()
+    void SetDay(short Day) { _Day = Day; }
+
+    short GetDay() { return _Day; }
+
+    __declspec(property(get = GetDay, put = SetDay)) short Day;
+
+    void SetMonth(short Month) { _Month = Month; }
+
+    short GetMonth() { return _Month; }
+
+    __declspec(property(get = GetMonth, put = SetMonth)) short Month;
+
+    void SetYear(short Year) { _Year = Year; }
+
+    short GetYear() { return _Year; }
+
+    __declspec(property(get = GetYear, put = SetYear)) short Year;
+
+    static clsDate GetSysDate()
     {
-        Date SysDate;
+        clsDate CurrentDate;
         time_t t = time(0);
         tm now;
         localtime_s(&now, &t);
-        SysDate.Year = now.tm_year + 1900;
-        SysDate.Month = now.tm_mon + 1;
-        SysDate.Day = now.tm_mday;
-        return SysDate;
+        CurrentDate.Year = now.tm_year + 1900;
+        CurrentDate.Month = now.tm_mon + 1;
+        CurrentDate.Day = now.tm_mday;
+        return CurrentDate;
     }
 
-    Date StringToDate(string strDate)
-    {
-        Date NewData;
-        vector<string> vDate = clsString::split(strDate, "/");
-
-        NewData.Day = stoi(vDate[0]);
-        NewData.Month = stoi(vDate[1]);
-        NewData.Year = stoi(vDate[2]);
-
-        return NewData;
-    }
-
-    string DateToString(Date NewDate)
+    string DateToString(clsDate NewDate)
     {
         return to_string(NewDate.Day) + "/" + to_string(NewDate.Month) + "/" + to_string(NewDate.Year);
     }
@@ -71,29 +83,29 @@ public:
 
     static short DaysInMonth(short Year, short Month)
     {
-        int DaysOfMonths[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+        int DaysOfMonths[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         return (Month < 1 || Month > 12) ? 0 : (Month == 2 ? (IsLeapYear(Year) ? 29 : 28) : (DaysOfMonths[Month - 1]));
 
         // In One Line:
         // return Month == 2 ? (IsLeapYear(Year) ? 29 : 28) : (Month == 4 || Month == 6 || Month == 9 || Month == 11) ? 30 : 31;
     }
 
-    static short DaysInMonth(Date NewDate)
+    static short DaysInMonth(clsDate NewDate)
     {
         short Month = NewDate.Month;
         short Day = NewDate.Day;
         short Year = NewDate.Year;
 
-        int DaysOfMonths[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+        int DaysOfMonths[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         return (Month < 1 || Month > 12) ? 0 : (Month == 2 ? (IsLeapYear(Year) ? 29 : 28) : (DaysOfMonths[Month - 1]));
 
         // In One Line:
         // return Month == 2 ? (IsLeapYear(Year) ? 29 : 28) : (Month == 4 || Month == 6 || Month == 9 || Month == 11) ? 30 : 31;
     }
 
-    Date DateFromYearBegnning(short Year, short Day)
+    clsDate DateFromYearBegnning(short Year, short Day)
     {
-        Date NewDate;
+        clsDate NewDate;
         short Month = 1;
         while (true)
         {
@@ -120,33 +132,33 @@ public:
         return (Day + y + (y / 4) - (y / 100) + (y / 400) + ((31 * m) / 12)) % 7;
     }
 
-    static short OrderOfDate(Date NewDate)
+    static short OrderOfDate(clsDate NewDate)
     {
         return OrderOfDate(NewDate.Year, NewDate.Month, NewDate.Day);
     }
 
     static string DayShortName(short DayOfWeekOrder)
     {
-        string arrDayNames[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+        string arrDayNames[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
         return arrDayNames[DayOfWeekOrder];
     }
 
-    static void Print(Date NewDate)
+    static void Print(clsDate NewDate)
     {
         string DateString = to_string(NewDate.Day) + "/" + to_string(NewDate.Month) + "/" + to_string(NewDate.Year);
 
         cout << "\n\n"
-            << DayShortName(OrderOfDate(NewDate)) << ", " << DateString << endl;
+             << DayShortName(OrderOfDate(NewDate)) << ", " << DateString << endl;
     }
 
     void Print()
     {
-        Print(_Date);
+        Print(*this);
     }
 
     static string MonthShortName(short Month)
     {
-        string arrDayNames[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+        string arrDayNames[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
         return arrDayNames[Month - 1];
     }
 
@@ -154,7 +166,7 @@ public:
     {
 
         cout << "____________________________________________" << MonthShortName(Month) << "_____________________________________________\n"
-            << endl;
+             << endl;
         cout << setw(12) << left << "Sun";
         cout << setw(12) << left << "Mon";
         cout << setw(12) << left << "Tue";
@@ -194,7 +206,7 @@ public:
 
     void PrintMonthCalender()
     {
-        PrintMonthCalender(_Date.Year, _Date.Month);
+        PrintMonthCalender(this->Year, this->Month);
     }
 
     static void PrintYearCalender(short Year)
@@ -207,30 +219,30 @@ public:
 
     void PrintYearCalender()
     {
-        PrintYearCalender(_Date.Year);
+        PrintYearCalender(this->Year);
     }
 
-    static bool IsValid(Date NewDate)
+    static bool IsValid(clsDate NewDate)
     {
         return (NewDate.Month <= 12 && NewDate.Month >= 1) && ((NewDate.Day <= DaysInMonth(NewDate) && NewDate.Day >= 1));
     }
 
     bool IsValid()
     {
-        return IsValid(_Date);
+        return IsValid(*this);
     }
 
-    static bool IsDayLast(Date NewDate)
+    static bool IsDayLast(clsDate NewDate)
     {
         return NewDate.Day == DaysInMonth(NewDate.Year, NewDate.Month);
     }
 
-    static bool IsMonthLast(Date NewDate)
+    static bool IsMonthLast(clsDate NewDate)
     {
         return NewDate.Month == 12;
     }
 
-    static void AddOneDayToDate(Date& NewDate)
+    static void AddOneDayToDate(clsDate &NewDate)
     {
         if (IsDayLast(NewDate))
         {
@@ -253,14 +265,14 @@ public:
 
     static int AgeInDays(clsDate Birthday, bool IncludeEndDay = false)
     {
-        Date CurrentDate = GetSysDate();
+        clsDate CurrentDate = GetSysDate();
 
-        if (IsDateBeforeDate2(Birthday._Date, CurrentDate))
+        if (IsDateBeforeDate2(Birthday, CurrentDate))
         {
             int Counter = 0;
-            while (IsDateBeforeDate2(Birthday._Date, CurrentDate))
+            while (IsDateBeforeDate2(Birthday, CurrentDate))
             {
-                AddOneDayToDate(Birthday._Date);
+                AddOneDayToDate(Birthday);
                 Counter++;
             }
 
@@ -272,37 +284,35 @@ public:
         }
     }
 
-    static bool IsDateBeforeDate2(Date Date1, Date Date2)
+    static bool IsDateBeforeDate2(clsDate Date1, clsDate Date2)
     {
         return (Date1.Year < Date2.Year) ? true : ((Date1.Year == Date2.Year) ? (Date1.Month < Date2.Month ? true : (Date1.Month == Date2.Month ? Date1.Day < Date2.Day : false)) : false);
     }
 
-    static bool IsDateEqualtoDate2(Date Date1, Date Date2)
+    static bool IsDateEqualtoDate2(clsDate Date1, clsDate Date2)
     {
         return Date1.Year == Date2.Year ? (Date1.Month == Date2.Month ? Date1.Day == Date2.Day : false) : (false);
     }
 
-    static bool IsDateAfterDate2(Date Date1, Date Date2)
+    static bool IsDateAfterDate2(clsDate Date1, clsDate Date2)
     {
         return !IsDateBeforeDate2(Date1, Date2) && !IsDateEqualtoDate2(Date1, Date2);
     }
 
     bool IsDateBeforeDate2(clsDate Date2)
     {
-        return IsDateBeforeDate2(_Date, Date2._Date);
+        return IsDateBeforeDate2(*this, Date2);
     }
 
     bool IsDateEqualtoDate2(clsDate Date2)
     {
 
-        return IsDateEqualtoDate2(_Date, Date2._Date);
+        return IsDateEqualtoDate2(*this, Date2);
     }
 
     bool IsDateAfterDate2(clsDate Date2)
     {
 
-        return IsDateAfterDate2(_Date, Date2._Date);
+        return IsDateAfterDate2(*this, Date2);
     }
-
 };
-
