@@ -357,4 +357,32 @@ public:
 
         return CalculateDateDifference(*this, NewDate2, IncludeEndDay);
     }
+
+    static string ReplaceWordInString(string Str, string Item, string Replace)
+    {
+        short pos = Str.find(Item);
+        string Before, After;
+        while (pos != std::string::npos)
+        {
+            Before = Str.substr(0, pos);
+            After = Str.substr(pos + Item.length(), Str.length() - 1);
+            Str = Before + Replace + After;
+            pos = Str.find(Item);
+        }
+        return Str;
+    }
+
+    static string FormateDate(clsDate NewDate, string DateFormat = "dd/mm/yyyy")
+    {
+        string FormattedDateString = "";
+        FormattedDateString = ReplaceWordInString(DateFormat, "dd", to_string(NewDate.Day));
+        FormattedDateString = ReplaceWordInString(FormattedDateString, "mm", to_string(NewDate.Month));
+        FormattedDateString = ReplaceWordInString(FormattedDateString, "yyyy", to_string(NewDate.Year));
+        return FormattedDateString;
+    }
+
+    string FormateDate(string DateFormat = "dd/mm/yyyy")
+    {
+        return FormateDate(*this, DateFormat);
+    }
 };
