@@ -17,12 +17,12 @@ int main()
     clsDate To1("31/12/2021");
     clsPeriod Period1 (From1, To1);
 
-    clsDate From2("31/12/2021");
+    clsDate From2("30/12/2021");
     clsDate To2("31/12/2022");
     clsPeriod Period2 (From2, To2);
 
     
-    cout << Period1.Length(true) << endl; 
+    cout << Period1.OverlapDays(Period2) << endl; 
 
     // clsDate NewDate1;
     // NewDate1.Print();

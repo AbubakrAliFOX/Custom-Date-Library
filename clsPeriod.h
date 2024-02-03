@@ -64,4 +64,61 @@ public:
 	{
 		return Length(*this, IncludeEndDay);
 	}
+
+	static bool IsDateWithinPeriod(clsPeriod NewPeriod, clsDate NewDate)
+	{
+		return !(clsDate::CompareTwoDates(NewDate, NewPeriod.Start) == clsDate::BeforeAfterEqualDate::Before || clsDate::CompareTwoDates(NewDate, NewPeriod.End) == clsDate::BeforeAfterEqualDate::After);
+	}
+
+	bool IsDateWithinPeriod(clsDate NewDate)
+	{
+		return IsDateWithinPeriod(*this, NewDate);
+	}
+
+
+	static int OverlapDays(clsPeriod Period1, clsPeriod Period2)
+	{
+		if (!AreDatesOverLapping(Period1, Period2))
+			return -999;
+
+		int Period1Length = Length(Period1, true);
+		int Period2Length = Length(Period2, true);
+		int OverlapCounter = 0;
+
+		// for compilation error
+		clsDate Period1Start = Period1.Start;
+		clsDate Period1End = Period1.End;
+		clsDate Period2Start = Period2.Start;
+		clsDate Period2End = Period2.End;
+
+		if (Period1Length < Period2Length)
+		{
+			while (clsDate::IsDateBeforeDate2(Period1Start, Period1End))
+			{
+				if (IsDateWithinPeriod(Period2, Period1Start))
+				{
+					OverlapCounter++;
+				}
+				clsDate::AddOneDayToDate(Period1Start);
+			}
+		}
+		else
+		{
+			while (clsDate::IsDateBeforeDate2(Period2Start, Period2End))
+			{
+				if (IsDateWithinPeriod(Period1, Period2Start))
+				{
+					OverlapCounter++;
+				}
+				clsDate::AddOneDayToDate(Period2Start);
+			}
+		}
+
+		return OverlapCounter;
+	}
+
+	int OverlapDays(clsPeriod Period2) {
+		return OverlapDays(*this, Period2);
+	}
+
 };
