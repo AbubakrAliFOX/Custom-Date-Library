@@ -4,28 +4,40 @@
 #include <ctime>
 #include <iomanip>
 #include "clsString.h"
-#include "clsPeriod.h";
 #include "clsDate.h"
+#include "clsPeriod.h";
 
 using namespace std;
 
 
 int main()
 {
-    clsDate NewDate1;
-    NewDate1.Print();
+    
+    clsDate From1("1/1/2021");
+    clsDate To1("31/12/2021");
+    clsPeriod Period1 (From1, To1);
 
-    clsDate NewDate2("3/12/2021");
-    NewDate2.Print();
+    clsDate From2("31/12/2021");
+    clsDate To2("31/12/2022");
+    clsPeriod Period2 (From2, To2);
 
-    clsDate NewDate3(29, 12, 1999);
-    NewDate3.Print();
+    
+    cout << Period1.Length(true) << endl; 
 
-    clsDate NewDate4(365, 2018);
-    NewDate4.Print();
+    // clsDate NewDate1;
+    // NewDate1.Print();
 
-    NewDate2.PrintYearCalender();
+    // clsDate NewDate2("3/12/2021");
+    // NewDate2.Print();
 
-    cout << clsDate::AgeInDays(clsDate(29, 12, 1999)) << endl;
-    cout << NewDate3.IsDateEqualtoDate2(clsDate(29,12,1999)) << endl;
+    // clsDate NewDate3(29, 12, 1999);
+    // NewDate3.Print();
+
+    // clsDate NewDate4(365, 2018);
+    // NewDate4.Print();
+
+    // NewDate2.PrintYearCalender();
+
+    // cout << clsDate::AgeInDays(clsDate(29, 12, 1999)) << endl;
+    // cout << NewDate3.IsDateEqualtoDate2(clsDate(29,12,1999)) << endl;
 }

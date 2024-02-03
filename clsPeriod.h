@@ -38,7 +38,7 @@ public:
 
 	__declspec(property(get = getEnd, put = setEnd)) clsDate End;
 
-	bool AreDatesOverLapping(clsPeriod Period1, clsPeriod Period2)
+	static bool AreDatesOverLapping(clsPeriod Period1, clsPeriod Period2)
 	{
 		if (clsDate::CompareTwoDates(Period2.End, Period1.Start) == clsDate::BeforeAfterEqualDate::Before || clsDate::CompareTwoDates(Period2.Start, Period1.End) == clsDate::BeforeAfterEqualDate::After)
 		{
@@ -48,5 +48,20 @@ public:
 		{
 			return true;
 		}
+	}
+
+	bool AreDatesOverLapping(clsPeriod Period2)
+	{
+		return AreDatesOverLapping(*this, Period2);
+	}
+
+	static int Length(clsPeriod NewPeriod, bool IncludeEndDay = false)
+	{
+		return clsDate::CalculateDateDifference(NewPeriod.Start, NewPeriod.End, IncludeEndDay);
+	}
+
+	int Length(bool IncludeEndDay = false)
+	{
+		return Length(*this, IncludeEndDay);
 	}
 };

@@ -316,8 +316,7 @@ public:
         return IsDateAfterDate2(*this, Date2);
     }
 
-    static enum BeforeAfterEqualDate
-    {
+    static enum BeforeAfterEqualDate {
         After = 1,
         Before = -1,
         Equal = 0
@@ -331,5 +330,31 @@ public:
     BeforeAfterEqualDate CompareTwoDates(clsDate Date2)
     {
         return CompareTwoDates(*this, Date2);
+    }
+
+    static int CalculateDateDifference(clsDate NewDate1, clsDate NewDate2, bool IncludeEndDay = false)
+    {
+
+        if (IsDateBeforeDate2(NewDate1, NewDate2))
+        {
+            int Counter = 0;
+            while (IsDateBeforeDate2(NewDate1, NewDate2))
+            {
+                AddOneDayToDate(NewDate1);
+                Counter++;
+            }
+
+            return IncludeEndDay ? ++Counter : Counter;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+    int CalculateDateDifference(clsDate NewDate2, bool IncludeEndDay = false)
+    {
+
+        return CalculateDateDifference(*this, NewDate2, IncludeEndDay);
     }
 };
